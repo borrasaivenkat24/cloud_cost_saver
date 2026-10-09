@@ -25,7 +25,9 @@ resource "aws_cloudfront_origin_access_control" "oac" {
   signing_behavior                  = "always"
   signing_protocol                  = "sigv4"
 }
-
+data "aws_cloudfront_cache_policy" "disabled" {
+  name = "Managed-CachingDisabled"
+}
 resource "aws_cloudfront_distribution" "cdn" {
   enabled             = true
   default_root_object = "index.html"
@@ -42,7 +44,7 @@ resource "aws_cloudfront_distribution" "cdn" {
     allowed_methods        = ["GET", "HEAD"]
     cached_methods         = ["GET", "HEAD"]
     # AWS managed "CachingDisabled", so the page always shows the latest status.json
-    cache_policy_id = "4135ea2d-6df9-4a0a-abd6-a2ac3ea8c5b5"
+    cache_policy_id = data.aws_cloudfront_cache_policy.disabled.id
   }
 
   restrictions {
