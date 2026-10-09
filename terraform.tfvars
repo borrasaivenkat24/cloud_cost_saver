@@ -1,0 +1,1 @@
+site_bucket_name = "venkat-cost-saver-site-12345"

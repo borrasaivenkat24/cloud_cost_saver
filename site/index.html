@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EC2 Cost Saver</title>
+  <style>
+    body { font-family: sans-serif; max-width: 640px; margin: 40px auto; padding: 0 16px; }
+    .card { border: 1px solid #ccc; border-radius: 8px; padding: 16px; }
+  </style>
+</head>
+<body>
+  <h1>EC2 Cost Saver</h1>
+  <p>Stops EC2 instances tagged <code>Environment=dev</code> every night at 10 PM IST.</p>
+  <div class="card" id="status">Loading...</div>
+  <script>
+    const box = document.getElementById("status");
+    fetch("status.json")
+      .then(r => { if (!r.ok) throw new Error("no status"); return r.json(); })
+      .then(d => {
+        box.textContent = "Last run: " + new Date(d.last_run).toLocaleString() +
+          " | Instances stopped: " + d.stopped_count +
+          (d.stopped_instances.length ? " (" + d.stopped_instances.join(", ") + ")" : "");
+      })
+      .catch(() => { box.textContent = "No run recorded yet."; });
+  </script>
+</body>
+</html>
